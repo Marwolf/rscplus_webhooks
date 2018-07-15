@@ -1,3 +1,5 @@
+exports.RUN = false; // Set to true when you've configured the script
+
 exports.USER_NAME = "<SET ME>"; // Your github username
 exports.USER_PASS = "<SET ME>"; // Your github password
 exports.USER_EMAIL = "<SET ME>"; // Your github email

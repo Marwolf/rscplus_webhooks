@@ -12,6 +12,11 @@ var child_process = require('child_process');
 var release_ready = false;
 var tag_ready = false;
 
+if(!config.RUN) {
+  console.log("Please edit config.js before running!");
+  process.exit();
+}
+
 function repo_createRelease(repo) {
   if(!release_ready || !tag_ready) {
     return;
