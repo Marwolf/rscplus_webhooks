@@ -77,7 +77,7 @@ handler.on('push', function (event) {
   if(forced == false) {
     // Update our repository, we havn't updated the version yet
     console.log("Running updater...");
-    child_process.spawnSync('sh', ['scripts/update.sh', config.USER_NAME, USER_REPO, config.USER_PASS, config.USER_EMAIL, config.USER_REALNAME, USER_BRANCH], {stdio: 'inherit'});
+    child_process.spawnSync('sh', ['scripts/update.sh', config.USER_NAME, USER_REPO, config.USER_PASS, config.USER_EMAIL, config.USER_REALNAME, USER_BRANCH, config.HTTP_DIRECTORY], {stdio: 'inherit'});
     return;
   }
 
@@ -85,7 +85,7 @@ handler.on('push', function (event) {
 
   // Build the project
   if(config.UPLOAD_BUILD) {
-    child_process.spawnSync('sh', ['scripts/build.sh'], {stdio: 'inherit'});
+    child_process.spawnSync('sh', ['scripts/build.sh', config.HTTP_DIRECTORY], {stdio: 'inherit'});
   }
 
   var gh = new GitHub({

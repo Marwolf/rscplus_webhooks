@@ -6,6 +6,7 @@
 # $4 - GitHub email
 # $5 - GitHub real name
 # $6 - GitHub branch
+# $7 - HTTP server directory
 
 # Update repo
 cd rscplus
@@ -13,11 +14,11 @@ git fetch origin
 git reset --hard origin/$6
 
 # Update rscplus version
-ant setversion
+ant setversion > $7/setversion.log
 git add src/Client/Settings.java
 
 # Format source code
-ant format-source
+ant format-source > $7/format-source.log
 git add **/**.java
 
 # Update repository with our copy
