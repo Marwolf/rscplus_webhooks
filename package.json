@@ -9,6 +9,7 @@
   "author": "",
   "license": "GPL-3.0-or-later",
   "dependencies": {
+    "fs-extra": "^6.0.1",
     "github-api": "^3.0.0",
     "github-webhook-handler": "^0.7.1"
   },

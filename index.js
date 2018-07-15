@@ -2,6 +2,15 @@
 var USER_REPO = "rscplus"; // Your github repo
 var USER_BRANCH = "master"; // Your branch within the repository
 
+// Copy config if it isn't made yet
+var fs = require('fs-extra');
+try {
+  fs.statSync("./config.js");
+} catch(e) {
+  fs.copySync("./config_default.js", "./config.js");
+  console.log("config.js created with defaults");
+}
+
 var config = require('./config.js');
 var http = require('http');
 var createHandler = require('github-webhook-handler');
