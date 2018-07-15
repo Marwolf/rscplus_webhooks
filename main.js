@@ -57,7 +57,7 @@ http.createServer(function(req, res) {
     res.statusCode = 404;
     res.end('no such location');
   });
-}).listen(7777);
+}).listen(config.PORT);
 
 handler.on('error', function(err) {
   console.error('Error:', err.message);

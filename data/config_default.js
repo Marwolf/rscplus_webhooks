@@ -1,4 +1,5 @@
 exports.RUN = false; // Set to true when you've configured the script
+exports.PORT = 7777; // Server port
 
 exports.USER_NAME = ""; // Your github username
 exports.USER_PASS = ""; // Your github password

@@ -18,7 +18,7 @@ Set all of your config options in this file accordingly.
 
 Open your repository webhooks settings.
 
-**Payload URL** should be set to "http://[server ip]:7777/webhook"
+**Payload URL** should be set to "http://[server ip]:[server port]/webhook"
 
 **Content type** should be set to "application/json"
 
