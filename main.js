@@ -7,7 +7,7 @@ var fs = require('fs-extra');
 try {
   fs.statSync("./config.js");
 } catch(e) {
-  fs.copySync("./config_default.js", "./config.js");
+  fs.copySync("./data/config_default.js", "./config.js");
   console.log("config.js created with defaults");
 }
 
@@ -50,7 +50,7 @@ function repo_createRelease(repo) {
   tag_ready = false;
 }
 
-child_process.spawnSync('sh', ['init.sh', config.USER_NAME, USER_REPO], {stdio: 'inherit'});
+child_process.spawnSync('sh', ['scripts/init.sh', config.USER_NAME, USER_REPO], {stdio: 'inherit'});
 
 http.createServer(function(req, res) {
   handler(req, res, function (err) {
@@ -77,7 +77,7 @@ handler.on('push', function (event) {
   if(forced == false) {
     // Update our repository, we havn't updated the version yet
     console.log("Running updater...");
-    child_process.spawnSync('sh', ['update.sh', config.USER_NAME, USER_REPO, config.USER_PASS, config.USER_EMAIL, config.USER_REALNAME], {stdio: 'inherit'});
+    child_process.spawnSync('sh', ['scripts/update.sh', config.USER_NAME, USER_REPO, config.USER_PASS, config.USER_EMAIL, config.USER_REALNAME], {stdio: 'inherit'});
     return;
   }
 
@@ -85,7 +85,7 @@ handler.on('push', function (event) {
 
   // Build the project
   if(config.UPLOAD_BUILD) {
-    child_process.spawnSync('sh', ['build.sh'], {stdio: 'inherit'});
+    child_process.spawnSync('sh', ['scripts/build.sh'], {stdio: 'inherit'});
   }
 
   var gh = new GitHub({
