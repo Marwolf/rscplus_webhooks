@@ -1,20 +1,11 @@
-// Config options
-var USER_NAME = "<SET ME>"; // Your github username
-var USER_PASS = "<SET ME>"; // Your github password
-var USER_EMAIL = "<SET ME>"; // Your github email
-var USER_REALNAME = "<SET ME>"; // Your real name
-var SECRET = "<SET ME>"; // Github webhooks secret
-
-// More config options
+// Static config options
 var USER_REPO = "rscplus"; // Your github repo
 var USER_BRANCH = "master"; // Your branch within the repository
-var UPLOAD_BUILD = false; // Upload build to release
 
-// CODE STARTS HERE
-
+var config = require('./config.js');
 var http = require('http');
 var createHandler = require('github-webhook-handler');
-var handler = createHandler({ path: '/webhook', secret: SECRET });
+var handler = createHandler({ path: '/webhook', secret: config.SECRET });
 var GitHub = require('github-api');
 var child_process = require('child_process');
 
@@ -45,7 +36,7 @@ function repo_createRelease(repo) {
   tag_ready = false;
 }
 
-child_process.spawnSync('sh', ['init.sh', USER_NAME, USER_REPO], {stdio: 'inherit'});
+child_process.spawnSync('sh', ['init.sh', config.USER_NAME, USER_REPO], {stdio: 'inherit'});
 
 http.createServer(function(req, res) {
   handler(req, res, function (err) {
@@ -63,7 +54,7 @@ handler.on('push', function (event) {
   var branch = event.payload.ref.substring(11);
   var forced = event.payload.forced;
 
-  if(repo != (USER_NAME + "/" + USER_REPO) || branch != USER_BRANCH) {
+  if(repo != (config.USER_NAME + "/" + USER_REPO) || branch != USER_BRANCH) {
     return;
   }
 
@@ -72,7 +63,7 @@ handler.on('push', function (event) {
   if(forced == false) {
     // Update our repository, we havn't updated the version yet
     console.log("Running updater...");
-    child_process.spawnSync('sh', ['update.sh', USER_NAME, USER_REPO, USER_PASS, USER_EMAIL, USER_REALNAME], {stdio: 'inherit'});
+    child_process.spawnSync('sh', ['update.sh', config.USER_NAME, USER_REPO, config.USER_PASS, config.USER_EMAIL, config.USER_REALNAME], {stdio: 'inherit'});
     return;
   }
 
@@ -84,11 +75,11 @@ handler.on('push', function (event) {
   }
 
   var gh = new GitHub({
-    username: USER_NAME,
-    password: USER_PASS
+    username: config.USER_NAME,
+    password: config.USER_PASS
   });
 
-  var repo = gh.getRepo(USER_NAME, USER_REPO);
+  var repo = gh.getRepo(config.USER_NAME, USER_REPO);
 
   repo.listReleases(function(err, result) {
     var release = result[0];
