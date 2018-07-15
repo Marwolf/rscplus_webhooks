@@ -5,11 +5,12 @@
 # $3 - GitHub password
 # $4 - GitHub email
 # $5 - GitHub real name
+# $6 - GitHub branch
 
 # Update repo
 cd rscplus
 git fetch origin
-git reset --hard origin/master
+git reset --hard origin/$6
 
 # Update rscplus version
 ant setversion

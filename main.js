@@ -43,7 +43,7 @@ function repo_createRelease(repo) {
   repo.createRelease(createRelease_options, function(error, results) {
     console.log("release created");
     if(config.UPLOAD_BUILD) {
-      console.log("warning: The script doesn't currently support build uploads");
+      child_process.spawnSync('sh', ['scripts/upload.sh', config.USER_NAME, config.USER_PASS, USER_REPO], {stdio: 'inherit'});
     }
   });
   release_ready = false;
@@ -77,7 +77,7 @@ handler.on('push', function (event) {
   if(forced == false) {
     // Update our repository, we havn't updated the version yet
     console.log("Running updater...");
-    child_process.spawnSync('sh', ['scripts/update.sh', config.USER_NAME, USER_REPO, config.USER_PASS, config.USER_EMAIL, config.USER_REALNAME], {stdio: 'inherit'});
+    child_process.spawnSync('sh', ['scripts/update.sh', config.USER_NAME, USER_REPO, config.USER_PASS, config.USER_EMAIL, config.USER_REALNAME, USER_BRANCH], {stdio: 'inherit'});
     return;
   }
 
