@@ -1,5 +1,11 @@
 #!/bin/sh
 
+# $1 - GitHub username
+# $2 - GitHub repository
+# $3 - GitHub password
+# $4 - GitHub email
+# $5 - GitHub real name
+
 # Update repo
 cd rscplus
 git fetch origin
