@@ -1,0 +1,15 @@
+{
+  "name": "rscplus_webhooks",
+  "version": "1.0.0",
+  "description": "rscplus GitHub webhooks",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "GPLv3",
+  "dependencies": {
+    "github-api": "^3.0.0",
+    "github-webhook-handler": "^0.7.1"
+  }
+}
