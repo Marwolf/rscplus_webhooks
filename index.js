@@ -33,7 +33,7 @@ function repo_createRelease(repo) {
 
   repo.createRelease(createRelease_options, function(error, results) {
     console.log("release created");
-    if(UPLOAD_BUILD) {
+    if(config.UPLOAD_BUILD) {
       console.log("warning: The script doesn't currently support build uploads");
     }
   });
@@ -75,7 +75,7 @@ handler.on('push', function (event) {
   console.log("Running release...");
 
   // Build the project
-  if(UPLOAD_BUILD) {
+  if(config.UPLOAD_BUILD) {
     child_process.spawnSync('sh', ['build.sh'], {stdio: 'inherit'});
   }
 
