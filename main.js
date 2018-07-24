@@ -16,6 +16,7 @@ var http = require('http');
 var createHandler = require('github-webhook-handler');
 var handler = createHandler({ path: '/webhook', secret: config.SECRET });
 var GitHub = require('github-api');
+var discord = require('discord.js');
 var child_process = require('child_process');
 
 var release_ready = false;
@@ -24,6 +25,24 @@ var tag_ready = false;
 if(!config.RUN) {
   console.log("Please edit config.js before running!");
   process.exit();
+}
+
+var discord_client = new discord.Client();
+discord_client.login(config.DISCORD_TOKEN);
+
+discord_client.on('ready', () => {
+  discord_send("Hello world, I'm back!");
+  console.log("Discord bot connected");
+});
+
+function discord_announce(message) {
+  const channel = discord_client.channels.find("name", "announcements");
+  channel.send(message);
+}
+
+function discord_send(message) {
+  const channel = discord_client.channels.find("name", "general-chat");
+  channel.send(message);
 }
 
 function repo_createRelease(repo) {
@@ -45,6 +64,7 @@ function repo_createRelease(repo) {
     if(config.UPLOAD_BUILD) {
       child_process.spawnSync('sh', ['scripts/upload.sh', config.USER_NAME, config.USER_PASS, USER_REPO], {stdio: 'inherit'});
     }
+    discord_send("@here rscplus has been updated!");
   });
   release_ready = false;
   tag_ready = false;
