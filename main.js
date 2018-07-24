@@ -64,7 +64,7 @@ function repo_createRelease(repo) {
     if(config.UPLOAD_BUILD) {
       child_process.spawnSync('sh', ['scripts/upload.sh', config.USER_NAME, config.USER_PASS, USER_REPO], {stdio: 'inherit'});
     }
-    discord_send("@here rscplus has been updated!");
+    discord_send("rscplus has been updated!");
   });
   release_ready = false;
   tag_ready = false;
