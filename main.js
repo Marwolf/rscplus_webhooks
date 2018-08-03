@@ -27,22 +27,32 @@ if(!config.RUN) {
   process.exit();
 }
 
-var discord_client = new discord.Client();
-discord_client.login(config.DISCORD_TOKEN);
-
-discord_client.on('ready', () => {
-  discord_send("Hello world, I'm back!");
-  console.log("Discord bot connected");
-});
+var discord_client = null;
+var discord_channel = null;
+var discord_message = null;
 
 function discord_announce(message) {
-  const channel = discord_client.channels.find("name", "announcements");
-  channel.send(message);
+  discord_client = new discord.Client();
+  discord_client.on('ready', () => {
+    const channel = discord_client.channels.find("name", discord_channel);
+    channel.send(discord_message);
+    discord_client.destroy();
+  });
+  discord_channel = "announcements";
+  discord_message = message;
+  discord_client.login(config.DISCORD_TOKEN);
 }
 
 function discord_send(message) {
-  const channel = discord_client.channels.find("name", "general-chat");
-  channel.send(message);
+  discord_client = new discord.Client();
+  discord_client.on('ready', () => {
+    const channel = discord_client.channels.find("name", discord_channel);
+    channel.send(discord_message);
+    discord_client.destroy();
+  });
+  discord_channel = "general-chat";
+  discord_message = message;
+  discord_client.login(config.DISCORD_TOKEN);
 }
 
 function repo_createRelease(repo) {
@@ -63,6 +73,7 @@ function repo_createRelease(repo) {
     console.log("release created");
     if(config.UPLOAD_BUILD) {
       child_process.spawnSync('sh', ['scripts/upload.sh', config.USER_NAME, config.USER_PASS, USER_REPO], {stdio: 'inherit'});
+      console.log("build uploaded");
     }
     discord_send("rscplus has been updated!");
   });
@@ -78,6 +89,8 @@ http.createServer(function(req, res) {
     res.end('no such location');
   });
 }).listen(config.PORT);
+
+discord_send("Hello world, I'm back!");
 
 handler.on('error', function(err) {
   console.error('Error:', err.message);
