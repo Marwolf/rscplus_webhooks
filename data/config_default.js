@@ -8,5 +8,3 @@ exports.USER_NAME = ""; // Your github username
 exports.USER_PASS = ""; // Your github password
 exports.USER_EMAIL = ""; // Your github email
 exports.USER_REALNAME = ""; // Your real name
-
-exports.DISCORD_TOKEN = ""; // Your discord bot token
