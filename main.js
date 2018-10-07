@@ -16,7 +16,6 @@ var http = require('http');
 var createHandler = require('github-webhook-handler');
 var handler = createHandler({ path: '/webhook', secret: config.SECRET });
 var GitHub = require('github-api');
-var discord = require('discord.js');
 var child_process = require('child_process');
 
 var release_ready = false;
@@ -25,34 +24,6 @@ var tag_ready = false;
 if(!config.RUN) {
   console.log("Please edit config.js before running!");
   process.exit();
-}
-
-var discord_client = null;
-var discord_channel = null;
-var discord_message = null;
-
-function discord_announce(message) {
-  discord_client = new discord.Client();
-  discord_client.on('ready', () => {
-    const channel = discord_client.channels.find("name", discord_channel);
-    channel.send(discord_message);
-    discord_client.destroy();
-  });
-  discord_channel = "announcements";
-  discord_message = message;
-  discord_client.login(config.DISCORD_TOKEN);
-}
-
-function discord_send(message) {
-  discord_client = new discord.Client();
-  discord_client.on('ready', () => {
-    const channel = discord_client.channels.find("name", discord_channel);
-    channel.send(discord_message);
-    discord_client.destroy();
-  });
-  discord_channel = "general-chat";
-  discord_message = message;
-  discord_client.login(config.DISCORD_TOKEN);
 }
 
 function repo_createRelease(repo) {
@@ -75,7 +46,6 @@ function repo_createRelease(repo) {
       child_process.spawnSync('sh', ['scripts/upload.sh', config.USER_NAME, config.USER_PASS, USER_REPO], {stdio: 'inherit'});
       console.log("build uploaded");
     }
-    discord_send("rscplus has been updated!");
   });
   release_ready = false;
   tag_ready = false;
@@ -89,8 +59,6 @@ http.createServer(function(req, res) {
     res.end('no such location');
   });
 }).listen(config.PORT);
-
-discord_send("Hello world, I'm back!");
 
 handler.on('error', function(err) {
   console.error('Error:', err.message);
