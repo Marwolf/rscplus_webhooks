@@ -1,4 +1,5 @@
 // Static config options
+var USER_OWNER = "OrN"; // Your github repo
 var USER_REPO = "rscplus"; // Your github repo
 var USER_BRANCH = "master"; // Your branch within the repository
 
@@ -43,7 +44,7 @@ function repo_createRelease(repo) {
   repo.createRelease(createRelease_options, function(error, results) {
     console.log("release created");
     if(config.UPLOAD_BUILD) {
-      child_process.spawnSync('sh', ['scripts/upload.sh', config.USER_NAME, config.USER_PASS, USER_REPO], {stdio: 'inherit'});
+      child_process.spawnSync('sh', ['scripts/upload.sh', config.USER_NAME, config.USER_PASS, USER_REPO, USER_OWNER], {stdio: 'inherit'});
       console.log("build uploaded");
     }
   });
@@ -51,7 +52,7 @@ function repo_createRelease(repo) {
   tag_ready = false;
 }
 
-child_process.spawnSync('sh', ['scripts/init.sh', config.USER_NAME, USER_REPO], {stdio: 'inherit'});
+child_process.spawnSync('sh', ['scripts/init.sh', USER_OWNER, USER_REPO], {stdio: 'inherit'});
 
 http.createServer(function(req, res) {
   handler(req, res, function (err) {
@@ -69,16 +70,30 @@ handler.on('push', function (event) {
   var branch = event.payload.ref.substring(11);
   var forced = event.payload.forced;
 
-  if(repo != (config.USER_NAME + "/" + USER_REPO) || branch != USER_BRANCH) {
+  var isCommit = (event.payload.head_commit != null);
+
+  if(isCommit == false) {
+    return;
+  }
+
+  var owner = (event.payload.head_commit.committer.username == config.USER_NAME);
+
+  console.log("Push owner: '" + event.payload.head_commit.committer.username + "'");
+  console.log("Bot owner: '" + config.USER_NAME + "'");
+  console.log("Commit owner: '" + owner + "'");
+  console.log("Repo: '" + repo + "'");
+  console.log("Branch: '" + branch + "'");
+
+  if(branch != USER_BRANCH) {
     return;
   }
 
   console.log('Received a push event for %s to %s', repo, branch);
 
-  if(forced == false) {
+  if(owner == false) {
     // Update our repository, we havn't updated the version yet
     console.log("Running updater...");
-    child_process.spawnSync('sh', ['scripts/update.sh', config.USER_NAME, USER_REPO, config.USER_PASS, config.USER_EMAIL, config.USER_REALNAME, USER_BRANCH, config.HTTP_DIRECTORY], {stdio: 'inherit'});
+    child_process.spawnSync('sh', ['scripts/update.sh', config.USER_NAME, USER_REPO, config.USER_PASS, config.USER_EMAIL, config.USER_REALNAME, USER_BRANCH, config.HTTP_DIRECTORY, USER_OWNER], {stdio: 'inherit'});
     return;
   }
 
@@ -94,7 +109,7 @@ handler.on('push', function (event) {
     password: config.USER_PASS
   });
 
-  var repo = gh.getRepo(config.USER_NAME, USER_REPO);
+  var repo = gh.getRepo(USER_OWNER, USER_REPO);
 
   repo.listReleases(function(err, result) {
     var release = result[0];

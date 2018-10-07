@@ -3,8 +3,9 @@
 # $1 - GitHub username
 # $2 - GitHub password
 # $3 - GitHub repository
+# $4 - GitHub owner
 
-response=$(curl --silent https://api.github.com/repos/$1/$3/releases/tags/Latest)
+response=$(curl --silent https://api.github.com/repos/$4/$3/releases/tags/Latest)
 release_id=$(echo $response | grep -Po '"id"\s*:\s*\K\d+' | head -1)
 
 # Package windows build
@@ -18,7 +19,7 @@ if [ -e rscplus.jar ]; then
        -H "Content-Type: application/zip" \
        --request POST \
        --data-binary "@rscplus.jar" \
-       https://uploads.github.com/repos/$1/$3/releases/$release_id/assets?name=rscplus.jar
+       https://uploads.github.com/repos/$4/$3/releases/$release_id/assets?name=rscplus.jar
 fi
 
 if [ -e rscplus-windows.zip ]; then
@@ -26,5 +27,5 @@ if [ -e rscplus-windows.zip ]; then
        -H "Content-Type: application/zip" \
        --request POST \
        --data-binary "@rscplus-windows.zip" \
-       https://uploads.github.com/repos/$1/$3/releases/$release_id/assets?name=rscplus-windows.zip
+       https://uploads.github.com/repos/$4/$3/releases/$release_id/assets?name=rscplus-windows.zip
 fi

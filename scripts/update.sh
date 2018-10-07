@@ -7,6 +7,7 @@
 # $5 - GitHub real name
 # $6 - GitHub branch
 # $7 - HTTP server directory
+# $8 - Repo Owner
 
 # Update repo
 cd rscplus
@@ -24,7 +25,7 @@ git add **/**.java
 # Update repository with our copy
 git config user.email "$4"
 git config user.name "$5"
-git commit --amend --no-edit
-git push -f https://$1:$3@github.com/$1/$2
+git commit -m "Automated version update and source format"
+git push https://$1:$3@github.com/$8/$2
 
 exit 0
